@@ -1,0 +1,25 @@
+flowchart TD
+ start([User lands on login page])
+ n1[User enters credentials]
+ n2{User selects remember me?}
+ n3[System validates credentials]
+ n4{Credentials valid?}
+ n5[Generate and store auth tokens]
+ n6([Navigate to dashboard])
+ n7[Display login error]
+ n8{Retry attempts exceeded?}
+ n9([Lockout user])
+ n10[User allowed to retry]
+     start --> n1
+     n1 --> n2
+     n2 -->|No| n3
+     n2 -->|Yes| n5
+     n5 --> n3
+     n3 --> n4
+     n4 -->|Yes| n6
+     n4 -->|No| n7
+     n7 --> n8
+     n8 -->|Yes| n9
+     n8 -->|No| n10
+     n10 --> n1
+     n6 --> n6
