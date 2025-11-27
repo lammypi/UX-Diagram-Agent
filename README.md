@@ -24,6 +24,8 @@ Submission for the Google 5-Day AI Agents Intensive.
 
 ## The Implementation   
 
+<img width="248" height="400" alt="image" src="https://github.com/user-attachments/assets/1a7a966a-c968-447d-865b-80993578e543" />
+
 At a high level this is a single agent architecture supported by a full suite of tools.
 - The agent (TaskBuilderAgent) is built with ```LlmAgent``` using Gemini 2.5 Flash Lite.
   - Implemented within lib/agents/taskflow_agent.py
