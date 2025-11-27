@@ -27,12 +27,20 @@ Submission for the Google 5-Day AI Agents Intensive.
 At a high level this is a single agent architecture supported by full suite of tools.
 - The agent is built with LlmAgent using Gemini 2.5 Flash Lite.
   - Implemented within lib/agents/taskflow_agent.py
+  - Interactive via ux_diagramming_agent.ipynb
+  - Session and state management provided via ```InMemorySessionService``` and ```InMemoryMemoryService```, with explicit ```USER_ID``` and ```SESSION_ID``` per session.
+  - Observability via ```log_event()``` that captures timing (```perf_counter```) and logs of tools called and status (```tool_called```).
 - 3 tools support the agent (found within lib/tools/builder.py):
   1. ```validate_flow()``` - validates the task flow according to a set of rules.
   2. ```flow_to_mermaid()``` - converts a validated task flow to Mermaid's grammar.
   3. ```build_task_flow()``` - tool that renders full results to the user.
-- A series of support functions the enable the creation of .mmd files and rendering of task flow PNG files.
-  - Located in lib/tools/support.py 
+- A series of support functions the enable the creation of .mmd files and rendering of task flow PNG files located in lib/tools/support.py:
+  1. ```log_event()``` - captures timestamp, event type, and validity status of an event.
+  2. ```extract_tool_result()``` - extracts results from the tools supporting the agent (see above).
+  3. ```save_mermaid()``` - saves a Mermaid taskflow to a .mmd file.
+  4. ```render_mermaid_via_mermaid_ink()``` - draws a Mermaid chart from a parsed string as a PNG, and saves it to a specified location.
+  5. ```pretty_print_taskflow_result()``` - displays a human-readable string of LLM Agent output regarding a Mermaid task flow.
+  6. ```run_session()``` - passes user query information to the LLM Agent during a session.
 
 
 ### How the Agent Defines Task Flows   
