@@ -1,0 +1,91 @@
+{
+    "title": "Driver views fuel card balance",
+    "actors": ["user", "system"],
+    "nodes": [
+        {
+            "id": "start",
+            "label": "Driver accesses login screen",
+            "actor": "user",
+            "type": "start"
+        },
+        {
+            "id": "n1",
+            "label": "System displays login form",
+            "actor": "System",
+            "type": "process"
+        },
+        {
+            "id": "n2",
+            "label": "Driver enters credentials and submits",
+            "actor": "User",
+            "type": "process"  
+        },
+        {
+            "id": "n3",
+            "label": "System validates credentials",
+            "actor": "System",
+            "type": "decision"
+        },
+        {
+            "id": "n4",
+            "label": "System shows dashboard",
+            "actor": "System",
+            "type": "process"
+        },
+        {
+            "id": "n5",
+            "label": "Driver navigates to fuel card section",
+            "actor": "User",
+            "type": "process"
+        },
+        {
+            "id": "n6",
+            "label": "System checks if driver has a fuel card",
+            "actor": "System",
+            "type": "decision"
+        },
+        {
+            "id": "n7",
+            "label": "System displays fuel card balance and recent transactions",
+            "actor": "System",
+            "type": "process"
+        },
+        {
+            "id": "end_success",
+            "label": "Driver has viewed balance and transactions",
+            "actor": "User",
+            "type": "end"
+        },
+        {
+            "id": "end_failure",
+            "label": "System unable to retrieve or render data",
+            "actor": "system",
+            "type": "end"
+        },
+        {
+            "id": "n8",
+            "label": "System displays login error message",
+            "actor": "System",
+            "type": "process"
+        },
+        {
+            "id": "end_failed_login",
+            "label": "Driver cannot access portal due to invalid credentials",
+            "actor": "User",
+            "type": "end"
+        }
+    ],
+    "edges": [
+        { "from": "start", "to": "n1" },
+        { "from": "n1", "to": "n2" },
+        { "from": "n2", "to": "n3" },
+        { "from": "n3", "to": "n4", "condition": "Credentials valid" },
+        { "from": "n3", "to": "n8", "condition": "Credentials invalid" },
+        { "from": "n8", "to": "end_failed_login" },
+        { "from": "n4", "to": "n5" },
+        { "from": "n5", "to": "n6" },
+        { "from": "n6", "to": "n7", "condition": "Successfully render fuel card data" },
+        { "from": "n6", "to": "end_failure" },
+        { "from": "n7", "to": "end_success" }
+    ]
+}
