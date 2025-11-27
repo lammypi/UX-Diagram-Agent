@@ -65,13 +65,14 @@ Nodes, edges, and taskflows are defined within lib/schema.py
 
 This implementation works best running locally in a Python 3.12 environment. 
 
-1. Clone the repo and enter the project directory.
+#### 1. Clone the repo and enter the project directory.
    ```
    git clone <UX-Diagram-Agent>.git
    cd <UX-Diagram-Agent>
    ```
    
-2. Create a virtual environment- ```venv``` or Conda will work, but the code below is only for ```venv```.
+#### 2. Create a virtual environment    
+```venv``` or Conda will work, but the code below is only for ```venv```.
    ```
    python -m venv .venv
 
@@ -82,12 +83,13 @@ This implementation works best running locally in a Python 3.12 environment.
    source .venv/bin/activate
    ```
    
-3. Install dependencies via the provided ```requirements.txt```
+#### 3. Install dependencies via the provided ```requirements.txt```
    ```
    pip install -r requirements.txt
    ```
    
-4. Configure your Google API key- this project uses Gemini via the Google AI APIs and expects an environment variable named GOOGLE_API_KEY. You can set it via a ```.env``` file like below:
+#### 4. Configure your Google API key   
+This project uses Gemini via the Google AI APIs and expects an environment variable named GOOGLE_API_KEY. You can set it via a ```.env``` file like below:
 ```
 GOOGLE_API_KEY = "YOUR_API_KEY_HERE"
 ```
@@ -100,8 +102,8 @@ set GOOGLE_API_KEY=YOUR_API_KEY_HERE
 # On Mac
 export GOOGLE_API_KEY=YOUR_API_KEY_HERE
 ```
-
-5. Verify the file structure- the minimal file structure required to run this project appears below.
+#### 5. Verify the file structure   
+The minimal file structure required to run this project appears below.
 ```
 (root)
 ├── ux_diagramming_agent.ipynb
@@ -117,7 +119,8 @@ export GOOGLE_API_KEY=YOUR_API_KEY_HERE
         └── support.py
 ```
    
-6. Run the notebook- you may need to initialize Jupyter Notebook or Lab to run the notebook in the project root directory.
+#### 6. Run the notebook 
+You may need to initialize Jupyter Notebook or Lab to run the notebook in the project root directory.
 ```
 # If you need to, select one of the options for starting jupyter
 jupyter notebook
