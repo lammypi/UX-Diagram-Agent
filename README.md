@@ -24,8 +24,8 @@ Submission for the Google 5-Day AI Agents Intensive.
 
 ## The Implementation   
 
-At a high level this is a single agent architecture supported by full suite of tools.
-- The agent is built with LlmAgent using Gemini 2.5 Flash Lite.
+At a high level this is a single agent architecture supported by a full suite of tools.
+- The agent (TaskBuilderAgent) is built with ```LlmAgent``` using Gemini 2.5 Flash Lite.
   - Implemented within lib/agents/taskflow_agent.py
   - Interactive via ux_diagramming_agent.ipynb
   - Session and state management provided via ```InMemorySessionService``` and ```InMemoryMemoryService```, with explicit ```USER_ID``` and ```SESSION_ID``` per session.
@@ -41,6 +41,8 @@ At a high level this is a single agent architecture supported by full suite of t
   4. ```render_mermaid_via_mermaid_ink()``` - draws a Mermaid chart from a parsed string as a PNG, and saves it to a specified location.
   5. ```pretty_print_taskflow_result()``` - displays a human-readable string of LLM Agent output regarding a Mermaid task flow.
   6. ```run_session()``` - passes user query information to the LLM Agent during a session.
+
+It's important to also mention here that the modularity of the agent means it will be easier to extend with additional agents and tools (example: exporting for Miro).
 
 
 ### How the Agent Defines Task Flows   
@@ -58,33 +60,80 @@ From a non-technical perspective, task flows have the following components which
 Nodes, edges, and taskflows are defined within lib/schema.py
 - Classes for ```NodeType```, ```Node```, ```Edge```, and ```TaskFlow```.
 
+
 ## Instructions
 
-This implementation works best running locally. For this reason, there is a requirements.txt file that can be used to create a virtual environment resembling the one the agent was created in. Install that using pip:
+This implementation works best running locally in a Python 3.12 environment. 
 
+1. Clone the repo and enter the project directory.
+   ```
+   git clone <UX-Diagram-Agent>.git
+   cd <UX-Diagram-Agent>
+   ```
+   
+2. Create a virtual environment- ```venv``` or Conda will work, but the code below is only for ```venv```.
+   ```
+   python -m venv .venv
+
+   # On Windows use this line
+   .venv\Scripts\activate
+
+   # On Mac use this line
+   source .venv/bin/activate
+   ```
+   
+3. Install dependencies via the provided ```requirements.txt```
+   ```
+   pip install -r requirements.txt
+   ```
+   
+4. Configure your Google API key- this project uses Gemini via the Google AI APIs and expects an environment variable named GOOGLE_API_KEY. You can set it via a ```.env``` file like below:
 ```
-pip install requirements.txt
+GOOGLE_API_KEY = "YOUR_API_KEY_HERE"
 ```
 
-Next, you will want to create your own .env file that stores a variable named GOOGLE_API_KEY:
-
+You can also export it directly in your shell:
 ```
-GOOGLE_API_KEY = "{YOUR-API-KEY-HERE}"
-```
-From there, check your file structure that it resembles the following minimal setup:
-- (root level)
-  |_ux_diagramming_agent.ipynb   
-  |_lib   
-       |_agent_diagram.py   
-       |_config.py   
-       |_schema.py   
-       |_agents   
-       |       |_taskflow_agent.py   
-       |_tools   
-              |_builder.py   
-              |_support.py   
+# On Windows
+set GOOGLE_API_KEY=YOUR_API_KEY_HERE
 
-If it does, you have everything you need to run the notebook, ux_diagramming_agent.ipynb.
+# On Mac
+export GOOGLE_API_KEY=YOUR_API_KEY_HERE
+```
+
+5. Verify the file structure- the minimal file structure required to run this project appears below.
+```
+(root)
+├── ux_diagramming_agent.ipynb
+├── requirements.txt
+├── lib/
+    ├── agent_diagram.py        # (This generates the architecture image in the notebook)
+    ├── config.py
+    ├── schema.py
+    ├── agents/
+    │   └── taskflow_agent.py
+    └── tools/
+        ├── builder.py
+        └── support.py
+```
+   
+6. Run the notebook- you may need to initialize Jupyter Notebook or Lab to run the notebook in the project root directory.
+```
+# If you need to, select one of the options for starting jupyter
+jupyter notebook
+
+# Lab
+jupyter lab
+```
+
+Once that is activated, you can open ```ux_diagramming_agent.ipynb``` and run the cells in order. Keep in mind if you want to try new prompts not shown in the notebook:
+
+1. The very first time you run the Agent during the session, use ```await run_session()``` with the details specified in the function signature.
+2. After the first call in a session, use ```await chat()```. You only need to pass it a string.
+
+.mmd files and PNG files will be saved to directories that you can specify. If you don't specify, these files will be save in the project root level.
+
+A successful run should generate a task flow diagram as Mermaid text and a PNG image, along with details on where file locations.
 
 ---
 #### License / Use
