@@ -3,7 +3,7 @@ Submission for the Google 5-Day AI Agents Intensive.
 
 **Category:** Enterprise Agents
 
-**Summary:** Creates user flows in Mermaid that users can then edit as necessary. The agent will also generate .mmd files and PNG files of the flows it generates for the user. It's the .mmd files that can be edited in greater detail by the user.
+**Summary:** Creates user flows in Mermaid that users can then edit as necessary. The agent will also generate .mmd files and PNG files of the flows it creates. It's the .mmd files that can be edited in greater detail by the user if needed, and then pasted into [Mermaid Live Editor](https://mermaid.live/).
 
 ---
 
