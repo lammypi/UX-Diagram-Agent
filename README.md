@@ -1,4 +1,4 @@
-# UX-Diagram-Agent
+# UX Task Flow Agent
 Submission for the Google 5-Day AI Agents Intensive.
 
 **Category:** Enterprise Agents
