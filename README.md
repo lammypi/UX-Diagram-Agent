@@ -42,19 +42,19 @@ At a high level this is a single agent architecture supported by a full suite of
   5. ```pretty_print_taskflow_result()``` - displays a human-readable string of LLM Agent output regarding a Mermaid task flow.
   6. ```run_session()``` - passes user query information to the LLM Agent during a session.
 
-It's important to also mention here that the modularity of the agent means it will be easier to extend with additional agents and tools (example: exporting for Miro).
+It's important to also mention here that the modularity of the agent means it will be easier to extend with additional agents and tools (example: specifying styling based on node type).
 
 
 ### How the Agent Defines Task Flows   
 
 From a non-technical perspective, task flows have the following components which are used as rules for task flow creation with this agent:
-- A single start node
+- A single ```start``` node
   - Has only one outgoing edge
-- One or more process nodes
+- One or more ```process``` nodes
   - Has at least one outgoing edge, and one incoming edge
-- Zero or more decision nodes
+- Zero or more ```decision``` nodes
   - Has at least two outgoing edges, and at least one incoming edge
-- At least one end node
+- At least one ```end``` node
   - Has at least one incoming edge and no outgoing edges.
 
 Nodes, edges, and taskflows are defined within lib/schema.py
