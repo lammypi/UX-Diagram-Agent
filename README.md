@@ -132,7 +132,30 @@ jupyter lab
 Once that is activated, you can open ```ux_diagramming_agent.ipynb``` and run the cells in order. Keep in mind if you want to try new prompts not shown in the notebook:
 
 1. The very first time you run the Agent during the session, use ```await run_session()``` with the details specified in the function signature.
-2. After the first call in a session, use ```await chat()```. You only need to pass it a string.
+```
+# User query
+my_query = """
+Create a task flow for completing a registration form. The first step should have the user on the form page.
+There will be fields for First Name, Last Name, Email Address, Date of Birth (optional), and Gender (optional).
+If the registration is successful, take the user to a page with a success message and text telling them to check their email to confirm their email address.
+If the registration is not successful, take the user to a page with an error message.
+"""
+
+# Run
+await run_session(
+        runner_instance=runner, # Lives in taskflow_agent.py
+        user_queries=query, 
+        session_service=session_service, # Lives in taskflow_agent.py
+        memory_service=memory_service, # Lives in taskflow_agent.py
+        user_id=USER_ID, # Lives in taskflow_agent.py
+        session_id=SESSION_ID # Lives in taskflow_agent.py
+)
+```
+3. After the first call in a session, use ```await chat()```. You only need to pass it a string.
+```
+# New user_input - assume the Agent asked you for clarification about how to handle existing users.
+new_user_input = """If a user already exists with that email address, notify the user. Ask them if they would like to sign in with existing credentials, or reset their password if they don't remember their login details."""
+```
 
 .mmd files and PNG files will be saved to directories that you can specify. If you don't specify, these files will be save in the project root level.
 
