@@ -73,16 +73,16 @@ GOOGLE_API_KEY = "{YOUR-API-KEY-HERE}"
 ```
 From there, check your file structure that it resembles the following minimal setup:
 - (root level)
-  |_ux_diagramming_agent.ipynb
-  |_lib
-       |_agent_diagram.py
-       |_config.py
-       |_schema.py
-       |_agents
-       |       |_taskflow_agent.py
-       |_tools
-              |_builder.py
-              |_support.py
+  |_ux_diagramming_agent.ipynb   
+  |_lib   
+       |_agent_diagram.py   
+       |_config.py   
+       |_schema.py   
+       |_agents   
+       |       |_taskflow_agent.py   
+       |_tools   
+              |_builder.py   
+              |_support.py   
 
 If it does, you have everything you need to run the notebook, ux_diagramming_agent.ipynb.
 
