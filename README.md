@@ -9,7 +9,7 @@ Submission for the Google 5-Day AI Agents Intensive.
 
 ## The Pitch
 
-**Problem**: UX designers and researchers often have to manually translate task descriptions into flow diagrams using tools like Mermaid or Miro. As the previous sentence implies, sometimes these tools are used in traditional tool ecosystems. Other times, they are used in AI-supported tool ecosystems (example: Lovable --> Builder.io --> Figma) where it's critical to the efficiency and quality of the project to have at least a loosely defined task flow. Regardless of the type of tool ecosystem a UXer works within, creating task flows can be tedious, time-consuming, and occasionally inconsistent.
+**Problem**: UX designers and researchers often have to manually translate task descriptions into flow diagrams using tools like Mermaid or Miro. As the previous sentence implies, sometimes these tools are used in traditional tool ecosystems. Other times, they are used in AI-supported tool ecosystems (example: Lovable --> Builder.io --> Figma) where it's critical to the efficiency and quality of the project to have at least a loosely defined task flow before using tools. Regardless of the type of tool ecosystem a UXer works within, creating task flows can be tedious, time-consuming, and occasionally inconsistent.
 
 **Solution**: An LLM-powered UX Task Flow Builder that does the steps outlined below.
 - Receives a natural language description of a UX task or flow.
@@ -56,8 +56,35 @@ From a non-technical perspective, task flows have the following components which
   - Has at least one incoming edge and no outgoing edges.
 
 Nodes, edges, and taskflows are defined within lib/schema.py
+- Classes for ```NodeType```, ```Node```, ```Edge```, and ```TaskFlow```.
 
 ## Instructions
+
+This implementation works best running locally. For this reason, there is a requirements.txt file that can be used to create a virtual environment resembling the one the agent was created in. Install that using pip:
+
+```
+pip install requirements.txt
+```
+
+Next, you will want to create your own .env file that stores a variable named GOOGLE_API_KEY:
+
+```
+GOOGLE_API_KEY = "{YOUR-API-KEY-HERE}"
+```
+From there, check your file structure that it resembles the following minimal setup:
+- (root level)
+  |_ux_diagramming_agent.ipynb
+  |_lib
+       |_agent_diagram.py
+       |_config.py
+       |_schema.py
+       |_agents
+       |       |_taskflow_agent.py
+       |_tools
+              |_builder.py
+              |_support.py
+
+If it does, you have everything you need to run the notebook, ux_diagramming_agent.ipynb.
 
 ---
 #### License / Use
