@@ -165,11 +165,13 @@ def render_mermaid_via_mermaid_ink(
     # Render
     if show:
         # Displays the image
+        plt.figure(figsize=(10,6), dpi=100)
         plt.imshow(img)
         if title:
             plt.title(title)
         else:
             plt.title("Mermaid Task Flow")
+        plt.tight_layout()
         plt.axis("off")  
 
     # Save the image
@@ -214,7 +216,10 @@ def pretty_print_taskflow_result(result: Dict[str, Any]) -> None:
     if issues:
         # Iterate
         for issue in issues:
-            msg = issues.get("message") or str(issue)
+            if isinstance(issue, dict):
+                msg = issue.get("message") or str(issue)
+            else:
+                msg = str(issue)
             print(f"    - {msg}")
 
     else:

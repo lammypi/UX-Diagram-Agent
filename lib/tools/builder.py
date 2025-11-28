@@ -4,7 +4,7 @@
 #### DATE: 24-Nov-2025
 
 # Imports
-from typing import Dict, Any
+from typing import List, Dict, Any
 
 
 
@@ -30,12 +30,42 @@ def validate_flow(flow: Dict[str, Any]) -> Dict[str, Any]:
     - a dictionary of flow validity details.
     '''
     # Issues holding list
-    issues = []
+    issues: List[Dict[str, Any]] = []
+
+    ### Type + structure checks
+    if not isinstance(flow, dict):
+        issues.append({
+            "type": "invalid_type",
+            "message": f"Flow must be a dict with 'nodes' and 'edges', but got {type(flow).__name__}: {flow!r}"
+            }
+        )
+        # Return
+        return {"valid": False, "issues": issues}
+    
+    # Raw details
+    nodes_raw = flow.get("nodes")
+    edges_raw = flow.get("edges")
+
+    if not isinstance(nodes_raw, list) or not isinstance(edges_raw, list):
+        issues.append({
+            "type": "invalid_structure",
+            "message": "Flow must have 'nodes' and 'edges' as lists. "
+        })
+        # Return
+        return {"valid": False, "issues": issues}
 
     # STEP 1A : Start/end/decision nodes
-    nodes = {n["id"]: n for n in flow.get("nodes", [])}
-    edges = flow.get("edges", [])
+    nodes = {n["id"]: n for n in nodes_raw if isinstance(n, dict) and "id" in n}
+    edges = [e for e in edges_raw if isinstance(e, dict)]
 
+    # Note if something important was lost
+    if len(nodes) == 0:
+        issues.append({
+            "type": "no_nodes",
+            "message": "Flow has no valid node definitions."
+        })
+
+    # NODE ROLES
     start_nodes = [n for n in nodes.values() if n.get("type") == "start"]
     end_nodes = [n for n in nodes.values() if n.get("type") == "end"]
     decision_nodes = [n for n in nodes.values() if n.get("type") == "decision"]
@@ -97,6 +127,7 @@ def validate_flow(flow: Dict[str, Any]) -> Dict[str, Any]:
                     "message": f"Node '{node_id}' has no incoming edges and is not the start node."
                 }
             )
+        # Non-end nodes have at least one outgoing edge
         if node.get("type") != "end" and len(outgoing[node_id]) == 0:
             issues.append(
                 {
@@ -107,7 +138,9 @@ def validate_flow(flow: Dict[str, Any]) -> Dict[str, Any]:
 
     # STEP 4: CHECK DECISION NODES
     for node in decision_nodes:
+        node_id = node["id"]
         outs = outgoing.get(node["id"], [])
+        # At least 2 outgoing edges
         if len(outs) < 2:
             issues.append(
                 {
@@ -115,6 +148,8 @@ def validate_flow(flow: Dict[str, Any]) -> Dict[str, Any]:
                     "message": f"Decision node '{node['id']}' should have at least 2 outgoing edges."
                 }
             )
+
+        # Every outgoing edge from a decision node must have a condition.
         for e in outs:
             cond = (e.get("condition") or "").strip()
             if not cond:
@@ -133,6 +168,7 @@ def validate_flow(flow: Dict[str, Any]) -> Dict[str, Any]:
 
 
 
+# ---------- MERMAID RENDERING ----------
 # Sending flow to Mermaid
 def flow_to_mermaid(flow: Dict[str, Any]) -> Dict[str, str]:
     '''
@@ -144,15 +180,28 @@ def flow_to_mermaid(flow: Dict[str, Any]) -> Dict[str, str]:
     Returns:
     - a dictionary of task flow details.
     '''
+    # Create a minimal diagram if shape is wrong
+    if not isinstance(flow, dict):
+        return {
+            "title": "Invalid Flow",
+            "mermaid": "flowchart TD\n ERR[Invalid flow: not a dict]\n"
+        }
+
     # Get nodes and edges
     nodes = flow.get("nodes", [])
     edges = flow.get("edges", [])
 
-    # Mapping nodes and ID collection
-    node_lookup = {n['id']: n for n in nodes}
-    node_ids = [n["id"] for n in nodes]
+    if not isinstance(nodes, list) or not isinstance(edges, list):
+        return {
+            "title": flow.get("title", "Invalid Flow"),
+            "mermaid": "flowchart TD\n ERR[Invalid flow: nodes/edges not lists]\n"
+        }
 
-    lines = ["flowchart TD"]
+    # Mapping nodes and ID collection
+    node_lookup = {n['id']: n for n in nodes if isinstance(n, dict) and "id" in n}
+    node_ids = list(node_lookup.keys())
+
+    lines: List[str] = ["flowchart TD"]
 
     def format_node(node: Dict[str, Any]) -> str:
         label = (node.get("label") or "").replace('"', '\\"')
@@ -173,9 +222,16 @@ def flow_to_mermaid(flow: Dict[str, Any]) -> Dict[str, str]:
     
     # Full edge specification
     for e in edges:
+        if not isinstance(e, dict):
+            continue
+        # Source, target, conditions
         src = e.get("from")
         tgt = e.get("to")
         cond = (e.get("condition") or "").strip()
+
+        if not src or tgt:
+            # this is a malformed edge, so move on from it
+            continue
 
         if cond:
             cond_clean = cond.replace('"', '\\"')
@@ -194,6 +250,8 @@ def flow_to_mermaid(flow: Dict[str, Any]) -> Dict[str, str]:
 
 
 
+# ---------- TOOL ENTRY POINT ----------
+
 # Build the task flow from a dictionary
 def build_task_flow(flow: Dict[str, Any]) -> Dict[str, Any]:
     '''
@@ -207,8 +265,25 @@ def build_task_flow(flow: Dict[str, Any]) -> Dict[str, Any]:
     '''
     # Validation
     validation = validate_flow(flow)
+
+    # Invalid produces a safe minimal diagram
+    if not validation.get("valid", False):
+        title = "Invalid Flow"
+        if isinstance(flow, dict):
+            title = flow.get("title", title)
+
+        mermaid = "flowchart TD\n ERR[Invalid flow input. See issues list.]\n"
+
+        # Return
+        return {
+            "validation": validation,
+            "mermaid": mermaid,
+            "title": title
+        }
+
     # Result
     mermaid_results = flow_to_mermaid(flow)
+
     # Return
     return {
         "validation": validation,
