@@ -5,6 +5,8 @@ Submission for the Google 5-Day AI Agents Intensive.
 
 **Summary:** Creates user flows in Mermaid that users can then edit as necessary. The agent will also generate .mmd files and PNG files of the flows it creates. It's the .mmd files that can be edited in greater detail by the user if needed, and then pasted into [Mermaid Live Editor](https://mermaid.live/).
 
+**Recent Updates:** As of early 2026, this agent is being refined to accept more complex task flow requests. Issues with generating connections between steps has also been corrected.
+
 ---
 
 ## The Pitch
